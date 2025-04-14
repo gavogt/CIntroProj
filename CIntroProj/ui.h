@@ -4,4 +4,6 @@
 
 void WelcomeMessage(void);
 
+char GetUserChoice(void);
+
 #endif // !UI_H

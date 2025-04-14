@@ -1,38 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include "cyborg.h"
 #include "ui.h"
 
+#define MAX_CYBORGS 10
+
 int main(void)
 {
-	char name[50];
-	int age;
+	char name[50] = { 0 };
+	int age = 0;
+	char choice;
+	int count = 0;
+	AlienCyborg cyborgs[MAX_CYBORGS] = { 0 }; // Array to hold multiple cyborg records
 
 	WelcomeMessage();
 
-	printf("Please enter your name: ");
+	choice = GetUserChoice();
 
-	if (scanf_s("%49s", name, (unsigned)sizeof(name)) != 1) {
-		printf("Error reading name\n");
-		return 1;
-	};
-	printf("Please enter your age: ");
+	do {
+		if (choice == 'Y') {
+			printf("You chose Yes.\n");
+			printf("Please enter your name: ");
+			if (scanf_s("%49s", name, (unsigned)sizeof(name)) != 1) {
+				printf("Error reading name\n");
+				return 1;
+			};
 
-	if (scanf_s("%d", &age) != 1) {
-		printf("Error reading age\n");
-		return 1;
-	};
+			printf("Please enter your age: ");
+			if (scanf_s("%d", &age) != 1) {
+				printf("Error reading age\n");
+				return 1;
+			};
 
-	prinf("Would you like to enter another cyborg? (y/n): ");
-	char choice;
-	if (scanf_s(" %c", &choice, (unsigned)sizeof(choice)) != 1) {
-		printf("Error reading choice\n");
-		return 1;
+			strcpy_s(cyborgs[count].name, sizeof(cyborgs[count].name), name);
+			cyborgs[count].age = age;
+			count++;
+
+			choice = GetUserChoice();
+		}
+		else if (choice == 'N') {
+			printf("You chose No.\n");
+			return 0;
+		}
+	} while (choice == 'Y' && count < MAX_CYBORGS);
+
+	for (int i = 0; i < count; i++) {
+		const char* ageMessage = GetAge(cyborgs[i].age);
+		printf("Welcome, your name is %s and %s \n", cyborgs[i].name, ageMessage);
 	}
 
-	const char* ageMessage = GetAge(age);
-
-	printf("Welcome, your name is %s and %s", name, ageMessage);
 	return 0;
 }
 
