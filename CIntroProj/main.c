@@ -109,4 +109,5 @@ Additional Data Fields:
 You can extend your structure to include more details (for example, a “cyborg ID”, “year of creation”, etc.), and adjust the rest of your program accordingly.
 
 Modularization:
+Refactor your code into separate functions or even separate source files (if you’re comfortable with that) to enhance the organization and reusability of your code.
 */
