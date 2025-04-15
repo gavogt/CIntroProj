@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "cyborg.h"
 #include "ui.h"
+#include "cyborg.h"
+
 
 #define MAX_CYBORGS 10
 
@@ -13,6 +14,8 @@ int main(void)
 	int age = 0;
 	char choice;
 	int count = 0;
+	char ageStr[10] = { 0 };
+
 	AlienCyborg cyborgs[MAX_CYBORGS] = { 0 }; // Array to hold multiple cyborg records
 
 	WelcomeMessage();
@@ -23,16 +26,27 @@ int main(void)
 		if (choice == 'Y') {
 			printf("You chose Yes.\n");
 			printf("Please enter your name: ");
-			if (scanf_s("%49s", name, (unsigned)sizeof(name)) != 1) {
+			if (fgets(name, sizeof(name), stdin) != NULL) {
+				name[strcspn(name, "\n")] = '\0';
+				if (strchr(name, '\n') == NULL) {
+					int c;
+					while ((c = getchar()) != '\n' && c != EOF);
+				}
+			}
+			else {
 				printf("Error reading name\n");
 				return 1;
-			};
+			}
 
 			printf("Please enter your age: ");
-			if (scanf_s("%d", &age) != 1) {
+			if (fgets(ageStr, sizeof(ageStr), stdin) != NULL) {
+				ageStr[strcspn(ageStr, "\n")] = '\0';
+				age = atoi(ageStr);
+			}
+			else {
 				printf("Error reading age\n");
 				return 1;
-			};
+			}
 
 			strcpy_s(cyborgs[count].name, sizeof(cyborgs[count].name), name);
 			cyborgs[count].age = age;
