@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include "ui.h"
+
 
 void WelcomeMessage(void)
 {
@@ -7,23 +9,22 @@ void WelcomeMessage(void)
 }
 
 char GetUserChoice(void) {
-	char choice;
-	do {
+    char choice;
+    char buffer[10];
+    do {
+        printf("Would you like to enter a cyborg? (y/n): ");
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+            printf("Error reading choice\n");
+            return 'N'; 
+        }
 
-		printf("Would you like to enter a cyborg? (y/n): ");
-		if (scanf_s(" %c", &choice, (unsigned)sizeof(choice)) != 1) {
-			printf("Error reading choice\n");
-			return 1;
-		}
+        choice = toupper(buffer[0]);
 
-		choice = toupper(choice);
-
-		if (choice != 'Y' && choice != 'N') {
-			printf("Invalid choice. Please enter Y or N.\n");
-		}
-		else {
-			break;
-		}
-
-	} while (1);
+        if (choice != 'Y' && choice != 'N') {
+            printf("Invalid choice. Please enter Y or N.\n");
+        }
+        else {
+            return choice;
+        }
+    } while (1);
 }
