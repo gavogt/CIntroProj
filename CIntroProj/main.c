@@ -17,18 +17,22 @@
 #include "ui.h"
 #include "cyborg.h"
 
-#define MAX_CYBORGS 10
-
 int main(void)
 {
-	char name[50] = { 0 };
 	int age = 0;
+	char ageStr[10] = { 0 };
+	int capacity = 10;
 	char choice;
 	int count = 0;
-	char ageStr[10] = { 0 };
+	char name[50] = { 0 };
+
 	FILE* file = NULL;
 
-	AlienCyborg cyborgs[MAX_CYBORGS] = { 0 }; // Array to hold multiple cyborg records
+	AlienCyborg* cyborgs = malloc(sizeof(AlienCyborg) * capacity);
+	if (cyborgs == NULL) {
+		printf("Memory allocation failed\n");
+		return EXIT_FAILURE;
+	}
 
 	errno_t err = fopen_s(&file, "cyborgs.txt", "w");
 	if (err != 0 || file == NULL) {
@@ -79,7 +83,7 @@ int main(void)
 			printf("You chose No.\n");
 			return 0;
 		}
-	} while (choice == 'Y' && count < MAX_CYBORGS);
+	} while (choice == 'Y' && count < capacity);
 
 	
 
@@ -97,7 +101,7 @@ int main(void)
 
 	fclose(file);
 
-	printf("Data written to file successfully.\n");
+	printf("Data written to file successfully.");
 
 	EXIT_SUCCESS;
 }
