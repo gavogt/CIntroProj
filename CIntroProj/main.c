@@ -27,8 +27,11 @@ int main(void)
 			printf("You chose Yes.\n");
 			printf("Please enter your name: ");
 			if (fgets(name, sizeof(name), stdin) != NULL) {
-				name[strcspn(name, "\n")] = '\0';
-				if (strchr(name, '\n') == NULL) {
+				size_t len = strlen(name);
+				if (len > 0 && name[len - 1] == '\n') {
+					name[len - 1] = '\0';
+				}
+				else {
 					int c;
 					while ((c = getchar()) != '\n' && c != EOF);
 				}
