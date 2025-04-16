@@ -2,9 +2,14 @@
 #ifndef CYBORG_H
 #define CYBORG_H
 
+#include <time.h>
+
 typedef struct {
-	char name[50];
+	int id;
 	int age;
+	char name[50];
+	struct tm created;
+
 } AlienCyborg;
 
 const char* GetAge(int age);

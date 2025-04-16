@@ -1,6 +1,6 @@
 /*
  * Name: Gabriel V.
- * Assignment: Advanced Alien Cyborg Program 
+ * Assignment: Advanced Alien Cyborg Program
  * Date: 2025-04-15
  *
  * Description:
@@ -9,13 +9,14 @@
  * The program uses structures to hold the cyborg records and demonstrates file input/output,
  * user input validation, and proper input buffering.
  */
-
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include "ui.h"
+#include <time.h>
 #include "cyborg.h"
+#include "ui.h"
+
 
 int main(void)
 {
@@ -73,6 +74,7 @@ int main(void)
 				return 1;
 			}
 
+			cyborgs[count].id = count + 1;
 			strcpy_s(cyborgs[count].name, sizeof(cyborgs[count].name), name);
 			cyborgs[count].age = age;
 			count++;
@@ -85,12 +87,24 @@ int main(void)
 		}
 	} while (choice == 'Y' && count < capacity);
 
-	
+	time_t now = time(NULL);
+	struct tm* local = localtime(&now);
+	if (local == NULL) {
+		printf("Error in getting local time\n");
+		EXIT_FAILURE;
+	}
+	else {
+		for (int i = 0; i < count; i++) {
+			cyborgs[i].created = *local;
+		}
+	}
 
 	for (int i = 0; i < count; i++) {
 		const char* ageMessage = GetAge(cyborgs[i].age);
+		char dateBuffer[100];
+		strftime(dateBuffer, sizeof(dateBuffer), "%Y-%m-%d %H:%M:%S", &cyborgs[i].created);
 		printf("Welcome, your name is %s and %s \n", cyborgs[i].name, ageMessage);
-		fprintf(file, "Cyborg %d: Name: %s, Age:%d, %s\n", i + 1, cyborgs[i].name, cyborgs[i].age, ageMessage);
+		fprintf(file, "Cyborg %d: Name: %s, Age:%d, %s, Date Created: %s\n", cyborgs[i].id, cyborgs[i].name, cyborgs[i].age, ageMessage, dateBuffer);
 	}
 
 	printf("\nSUMMARY:\n");
