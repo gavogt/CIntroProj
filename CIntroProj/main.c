@@ -70,10 +70,18 @@ int main(void)
 		}
 	} while (choice == 'Y' && count < MAX_CYBORGS);
 
+	
+
 	for (int i = 0; i < count; i++) {
 		const char* ageMessage = GetAge(cyborgs[i].age);
 		printf("Welcome, your name is %s and %s \n", cyborgs[i].name, ageMessage);
 		fprintf(file, "Cyborg %d: Name: %s, Age:%d, %s\n", i + 1, cyborgs[i].name, cyborgs[i].age, ageMessage);
+	}
+
+	printf("\nSUMMARY:\n");
+	for (int i = 0; i < count; i++) {
+		const char* ageMessage = GetAge(cyborgs[i].age);
+		printf("Cyborg %d: Name: %s, Age:%d, %s\n", i + 1, cyborgs[i].name, cyborgs[i].age, ageMessage);
 	}
 
 	fclose(file);
