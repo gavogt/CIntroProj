@@ -1,10 +1,21 @@
+/*
+ * Name: Gabriel V.
+ * Assignment: Advanced Alien Cyborg Program 
+ * Date: 2025-04-15
+ *
+ * Description:
+ * This program collects data about alien cyborgs, including their names and ages,
+ * categorizes them based on age, and stores the data in an external file (cyborgs.txt).
+ * The program uses structures to hold the cyborg records and demonstrates file input/output,
+ * user input validation, and proper input buffering.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "ui.h"
 #include "cyborg.h"
-
 
 #define MAX_CYBORGS 10
 
