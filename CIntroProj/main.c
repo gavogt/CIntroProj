@@ -15,8 +15,15 @@ int main(void)
 	char choice;
 	int count = 0;
 	char ageStr[10] = { 0 };
+	FILE* file = NULL;
 
 	AlienCyborg cyborgs[MAX_CYBORGS] = { 0 }; // Array to hold multiple cyborg records
+
+	errno_t err = fopen_s(&file, "cyborgs.txt", "w");
+	if (err != 0 || file == NULL) {
+		printf("Error opening file\n");
+		return EXIT_FAILURE;
+	}
 
 	WelcomeMessage();
 
@@ -66,9 +73,14 @@ int main(void)
 	for (int i = 0; i < count; i++) {
 		const char* ageMessage = GetAge(cyborgs[i].age);
 		printf("Welcome, your name is %s and %s \n", cyborgs[i].name, ageMessage);
+		fprintf(file, "Cyborg %d: Name: %s, Age:%d, %s\n", i + 1, cyborgs[i].name, cyborgs[i].age, ageMessage);
 	}
 
-	return 0;
+	fclose(file);
+
+	printf("Data written to file successfully.\n");
+
+	EXIT_SUCCESS;
 }
 
 /*
