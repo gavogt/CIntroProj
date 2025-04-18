@@ -20,6 +20,7 @@
 
 int main(void)
 {
+	// Variables
 	int age = 0;
 	char ageStr[10] = { 0 };
 	int capacity = 10;
@@ -29,27 +30,43 @@ int main(void)
 
 	FILE* file = NULL;
 
+	// Allocate dynamic array for cyborgs where big enough for capacity 
+	// If the allocation fails, print an error message and exit
 	AlienCyborg* cyborgs = malloc(sizeof(AlienCyborg) * capacity);
 	if (cyborgs == NULL) {
 		printf("Memory allocation failed\n");
 		return EXIT_FAILURE;
 	}
 
+	// Open file for writing
+	// Store error code in Err and check if it is non 0 [Failed]
+	// If the file cannot be opened, print an error message and exit
 	errno_t err = fopen_s(&file, "cyborgs.txt", "w");
 	if (err != 0 || file == NULL) {
 		printf("Error opening file\n");
 		return EXIT_FAILURE;
 	}
 
+	// Print welcome message
 	WelcomeMessage();
 
+	// Ask user if they want to enter cyborg data
 	choice = GetUserChoice();
 
 	do {
 		if (choice == 'Y') {
 			printf("You chose Yes.\n");
 			printf("Please enter your name: ");
-			if (fgets(name, sizeof(name), stdin) != NULL) {
+
+			/*
+			* Fgets is used to read a string from stdin
+			* n success:
+			*	If string of name last character is a newline, strip it
+			*	Replace newline with null terminator
+			*	Else, read character while not new line or EOF
+			* Else on failure, print error message and exit		 
+			*/
+			 if (fgets(name, sizeof(name), stdin) != NULL) {
 				size_t len = strlen(name);
 				if (len > 0 && name[len - 1] == '\n') {
 					name[len - 1] = '\0';
@@ -64,6 +81,10 @@ int main(void)
 				return 1;
 			}
 
+			 // Fgets is used to read a string from stdin
+			 // Replace newline with a null terminator
+			 // convert string to integer using atoi
+			 // If the input is invalid, print error message and exit
 			printf("Please enter your age: ");
 			if (fgets(ageStr, sizeof(ageStr), stdin) != NULL) {
 				ageStr[strcspn(ageStr, "\n")] = '\0';
@@ -74,11 +95,15 @@ int main(void)
 				return 1;
 			}
 
+			// Assign values to the cyborg structure
 			cyborgs[count].id = count + 1;
 			strcpy_s(cyborgs[count].name, sizeof(cyborgs[count].name), name);
 			cyborgs[count].age = age;
+
+			// Increment the count of cyborgs
 			count++;
 
+			// Assign choice to Y or N
 			choice = GetUserChoice();
 		}
 		else if (choice == 'N') {
@@ -87,6 +112,10 @@ int main(void)
 		}
 	} while (choice == 'Y' && count < capacity);
 
+	// Assign current time to time_t now
+	// Assign local time (now) to local pointer to tm structure
+	// If local is NULL, print error message and exit
+	// Else, loop through cyborgs and assign created time to each cyborg
 	time_t now = time(NULL);
 	struct tm* local = localtime(&now);
 	if (local == NULL) {
@@ -99,20 +128,27 @@ int main(void)
 		}
 	}
 
+	// Write the data to the file and print to console
 	for (int i = 0; i < count; i++) {
 		const char* ageMessage = GetAge(cyborgs[i].age);
 		char dateBuffer[100];
+		// Format the date and time
 		strftime(dateBuffer, sizeof(dateBuffer), "%Y-%m-%d %H:%M:%S", &cyborgs[i].created);
+		// Print to console
 		printf("Welcome, your name is %s and %s \n", cyborgs[i].name, ageMessage);
+
+		// Write to file
 		fprintf(file, "Cyborg %d: Name: %s, Age:%d, %s, Date Created: %s\n", cyborgs[i].id, cyborgs[i].name, cyborgs[i].age, ageMessage, dateBuffer);
 	}
-
+	
+	// Print summary of all cyborgs
 	printf("\nSUMMARY:\n");
 	for (int i = 0; i < count; i++) {
 		const char* ageMessage = GetAge(cyborgs[i].age);
 		printf("Cyborg %d: Name: %s, Age:%d, %s\n", i + 1, cyborgs[i].name, cyborgs[i].age, ageMessage);
 	}
 
+	// Close file
 	fclose(file);
 
 	printf("Data written to file successfully.");
